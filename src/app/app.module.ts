@@ -14,6 +14,7 @@ import { TransactionService } from './service/transaction.service';
 import { ClientComponent } from './client/client.component';
 import { ClientService } from './service/client.service';
 import { ReportService } from './service/report.service';
+import { ReportComponent } from './report/report.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -26,6 +27,7 @@ export function tokenGetter() {
     DashboardComponent,
     TransactionComponent,
     ClientComponent,
+    ReportComponent
   ],
   imports: [
     BrowserModule,
