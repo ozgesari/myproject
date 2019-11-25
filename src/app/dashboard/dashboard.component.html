@@ -1,0 +1,73 @@
+<div id="content-wrapper">
+
+  <div class="container-fluid">
+
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="#">Dashboard</a>
+      </li>
+      <li class="breadcrumb-item active">Overview</li>
+    </ol>
+
+    <!-- SEARCH -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">Transaction Detail</div>
+          <div class="card-body">
+            <form>
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-md-12">
+                    <div class="form-label-group">
+                      <input type="text" id="transactionId1" name="transactionId1" class="form-control"
+                        placeholder="Transaction ID" [(ngModel)]="transactionIdForTransactionSearch" required="required">
+                      <label for="transactionId1">Search by Transaction ID</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <a class="btn btn-primary" href="/transaction/{{transactionIdForTransactionSearch}}">Search</a>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">Client Detail</div>
+            <div class="card-body">
+              <form>
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-12">
+                      <div class="form-label-group">
+                        <input type="text" id="transactionId2" name="transactionId2" class="form-control"
+                          placeholder="Transaction ID" [(ngModel)]="transactionIdForClientSearch" required="required">
+                        <label for="transactionId2">Search by Transaction ID</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <a class="btn btn-primary" href="/client/{{transactionIdForClientSearch}}">Search</a>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- SEARCH -->
+  </div>
+  <!-- /.container-fluid -->
+
+  <!-- Sticky Footer -->
+  <footer class="sticky-footer">
+    <div class="container my-auto">
+      <div class="copyright text-center my-auto">
+        <span>Copyright © Financial House 2019</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+<!-- /.content-wrapper -->

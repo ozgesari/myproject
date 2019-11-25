@@ -1,0 +1,787 @@
+<div id="content-wrapper">
+
+  <div class="container-fluid">
+
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="#">{{transactionId ? "Transaction" : "Dashboard"}}</a>
+      </li>
+      <li class="breadcrumb-item active">
+        {{transactionId ? transactionDetailResponse.customerInfo.billingTitle + " " +  transactionDetailResponse.customerInfo.billingFirstName + " " + transactionDetailResponse.customerInfo.billingLastName : "Transactions"}}
+      </li>
+    </ol>
+
+    <!-- ERROR RESPONSE -->
+    <div *ngIf="errorResponse" class="alert alert-danger" role="alert">{{errorResponse.status + " : " + errorResponse.message}}</div>
+
+    <!-- SEARCH -->
+    <div class="card mb-3" *ngIf="!transactionId">
+      <div class="card-header">Transaction Search</div>
+      <div class="card-body">
+        <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <input type="date" id="startDate" name="startDate" class="form-control" placeholder="Start Date"
+                    formControlName="startDate" required="required" autofocus="autofocus" value="2015-07-01">
+                  <label for="startDate">Start Date</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <input type="date" id="endDate" name="endDate" class="form-control" placeholder="End Date"
+                    required="required" formControlName="endDate" value="2019-11-01">
+                  <label for="endDate">End Date</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <select class="custom-select" id="status" name="status" formControlName="status">
+                      <option value="" selected>Select status</option>
+                      <option value="APPROVED">Approved</option>
+                      <option value="WAITING">Waiting</option>
+                      <option value="DECLINED">Declined</option>
+                      <option value="ERROR">Error</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <input type="text" id="filterField" name="filterField" formControlName="filterField" class="form-control"
+                    placeholder="Filter Field">
+                  <label for="filterField">Filter Field</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <input type="text" id="operation" class="form-control" formControlName="operation" placeholder="Operation">
+                  <label for="operation">Operation</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <input type="text" id="paymentMethod" class="form-control" name="paymentMethod" formControlName="paymentMethod" placeholder="Payment Method">
+                  <label for="paymentMethod">Payment Method</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <input type="text" id="errorCode" class="form-control" formControlName="errorCode" name="errorCode" placeholder="Error Code">
+                  <label for="errorCode">Error Code</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                  <div class="form-label-group">
+                    <input type="text" id="merchant" class="form-control" name="merchant" formControlName="merchant" placeholder="Merchant">
+                    <label for="merchant">Merchant</label>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <input type="text" id="acquirer" class="form-control" formControlName="acquirer" placeholder="Acquirer">
+                  <label for="acquirer">Acquirer</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+    <!-- SEARCH -->
+
+
+    <!-- TRANSACTION INFO -->
+    <div *ngIf="transactionId">
+      <div class="card mb-3">
+        <div class="card-header">Transaction Details</div>
+        <div class="card-body">
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view20">Merchant Name</label>
+                <div class="form-control" id="view20">
+                  {{transactionDetailResponse.merchant.name}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view21">Transaction ID</label>
+                <div class="form-control" id="view21">
+                  {{transactionDetailResponse.transaction.merchant.transactionId}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view22">Original Amount</label>
+                <div class="form-control" id="view22">
+                  {{transactionDetailResponse.fx.merchant.originalAmount}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view23">Original Currency</label>
+                <div class="form-control" id="view23">
+                  {{transactionDetailResponse.fx.merchant.originalCurrency}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view1">Reference No</label>
+                <div class="form-control" id="view1">
+                  {{transactionDetailResponse.transaction.merchant.referenceNo}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view2">Merchant ID</label>
+                <div class="form-control" id="view2">
+                  {{transactionDetailResponse.transaction.merchant.merchantId}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view3">Status</label>
+                <div class="form-control" id="view3">
+                  {{transactionDetailResponse.transaction.merchant.status}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view4">Channel</label>
+                <div class="form-control" id="view4">
+                  {{transactionDetailResponse.transaction.merchant.channel}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view5">Custom Data</label>
+                <div class="form-control" id="view5">
+                  {{transactionDetailResponse.transaction.merchant.customData ? transactionDetailResponse.transaction.merchant.customData : "N/A"}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view6">Chain ID</label>
+                <div class="form-control" id="view6">
+                  {{transactionDetailResponse.transaction.merchant.chainId}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view7">Type</label>
+                <div class="form-control" id="view7">
+                  {{transactionDetailResponse.transaction.merchant.type}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view8">Agent Info ID</label>
+                <div class="form-control" id="view8">
+                  {{transactionDetailResponse.transaction.merchant.agentInfoId}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view9">Operation</label>
+                <div class="form-control" id="view9">
+                  {{transactionDetailResponse.transaction.merchant.operation}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view10">Updated Date Time</label>
+                <div class="form-control" id="view10">
+                  {{transactionDetailResponse.transaction.merchant.updated_at}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view11">Created Date Time</label>
+                <div class="form-control" id="view11">
+                  {{transactionDetailResponse.transaction.merchant.created_at}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view12">Merchant ID</label>
+                <div class="form-control" id="view12">
+                  {{transactionDetailResponse.transaction.merchant.id}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view15">FX Transaction ID</label>
+                <div class="form-control" id="view15">
+                  {{transactionDetailResponse.transaction.merchant.fxTransactionId}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view16">Acquirer Transaction ID</label>
+                <div class="form-control" id="view16">
+                  {{transactionDetailResponse.transaction.merchant.acquirerTransactionId}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view17">Code</label>
+                <div class="form-control" id="view17">
+                  {{transactionDetailResponse.transaction.merchant.code}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view18">Message</label>
+                <div class="form-control" id="view18">
+                  {{transactionDetailResponse.transaction.merchant.message}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CLIENT INFO -->
+      <div class="card mb-3">
+        <div class="card-header">Agent Details</div>
+        <div class="card-body">
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view30">Client ID</label>
+                <div class="form-control" id="view30">
+                  {{transactionDetailResponse.transaction.merchant.agent.id}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view31">Customer IP</label>
+                <div class="form-control" id="view31">
+                  {{transactionDetailResponse.transaction.merchant.agent.customerIp}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view32">Customer User Agent</label>
+                <div class="form-control" id="view32">
+                  {{transactionDetailResponse.transaction.merchant.agent.customerUserAgent}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view33">Merchant IP</label>
+                <div class="form-control" id="view33">
+                  {{transactionDetailResponse.transaction.merchant.agent.merchantIp}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view34">Merchant User Agent</label>
+                <div class="form-control" id="view34">
+                  {{transactionDetailResponse.transaction.merchant.agent.merchantUserAgent}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view35">Created Date Time</label>
+                <div class="form-control" id="view35">
+                  {{transactionDetailResponse.transaction.merchant.agent.created_at}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view36">Updated Date Time</label>
+                <div class="form-control" id="view36">
+                  {{transactionDetailResponse.transaction.merchant.agent.updated_at}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view37">Deleted Date Time</label>
+                <div class="form-control" id="view37">
+                  {{transactionDetailResponse.transaction.merchant.agent.deleted_at ? transactionDetailResponse.transaction.merchant.agent.deleted_at : "N/A"}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Customer INFO-->
+      <div class="card mb-3">
+        <div class="card-header">Customer Info</div>
+        <div class="card-body">
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view40">Customer ID</label>
+                <div class="form-control" id="view40">
+                  {{transactionDetailResponse.customerInfo.id}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view41">Created Date Time</label>
+                <div class="form-control" id="view41">
+                  {{transactionDetailResponse.customerInfo.created_at}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view42">Updated Date Time</label>
+                <div class="form-control" id="view42">
+                  {{transactionDetailResponse.customerInfo.updated_at}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view43">Deleted Date Time</label>
+                <div class="form-control" id="view43">
+                  {{transactionDetailResponse.customerInfo.deleted_at ? transactionDetailResponse.customerInfo.deleted_at : "N/A"}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view44">Number</label>
+                <div class="form-control" id="view44">
+                  {{transactionDetailResponse.customerInfo.number}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view45">Expiry Date Time</label>
+                <div class="form-control" id="view45">
+                  {{transactionDetailResponse.customerInfo.expiryYear}} /
+                  {{transactionDetailResponse.customerInfo.expiryMonth}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view46">Email</label>
+                <div class="form-control" id="view46">
+                  {{transactionDetailResponse.customerInfo.email}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view47">Birthdate</label>
+                <div class="form-control" id="view47">
+                  {{transactionDetailResponse.customerInfo.birthday}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view46">Email</label>
+                <div class="form-control" id="view46">
+                  {{transactionDetailResponse.customerInfo.email}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view47">Birthdate</label>
+                <div class="form-control" id="view47">
+                  {{transactionDetailResponse.customerInfo.birthday}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view46">Billing Name</label>
+                <div class="form-control" id="view46">
+                  {{transactionDetailResponse.customerInfo.billingTitle}}
+                  {{transactionDetailResponse.customerInfo.billingFirstName}}
+                  {{transactionDetailResponse.customerInfo.billingLastName}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view47">Birthdate</label>
+                <div class="form-control" id="view47">
+                  {{transactionDetailResponse.customerInfo.birthday}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view48">Billing Company</label>
+                <div class="form-control" id="view48">
+                  {{transactionDetailResponse.customerInfo.billingCompany}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view49">Billing Title</label>
+                <div class="form-control" id="view49">
+                  {{transactionDetailResponse.customerInfo.billingTitle}}
+                  {{transactionDetailResponse.customerInfo.billingFirstName}}
+                  {{transactionDetailResponse.customerInfo.billingLastName}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view50">Billing Phone</label>
+                <div class="form-control" id="view50">
+                  {{transactionDetailResponse.customerInfo.billingPhone}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view51">Billing Country</label>
+                <div class="form-control" id="view51">
+                  {{transactionDetailResponse.customerInfo.billingCountry}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSACTION INFO -->
+
+    <!-- DataTables -->
+    <div class="card mb-3" *ngIf="transactionResponse">
+      <div class="card-header">
+        <i class="fas fa-table"></i> Search Results</div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Transaction ID</th>
+                <th scope="col">Acquirer</th>
+                <th scope="col">Merchant Name</th>
+                <th scope="col">Created Date Time</th>
+
+                <th scope="col">Type</th>
+                <th scope="col">Status</th>
+                <th scope="col">Detail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of transactionResponse.data; let i = index" [attr.data-index]="i">
+                <th scope="row">{{row.transaction.merchant.transactionId}}</th>
+                <td>{{row.acquirer?.name}}</td>
+                <td>{{row.merchant.name}}</td>
+                <td>{{row.created_at}}</td>
+
+                <td>{{row.acquirer?.type}}</td>
+                <td>{{row.transaction.merchant.status}}</td>
+                <td>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"
+                    (click)="assignModelIndex(i)" onclick="$('#myModal').modal('show');">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                  <div class="divider"></div>
+                  <a class="btn btn-outline-primary"
+                    href="/transaction/{{row.transaction.merchant.transactionId}}">Transaction</a>
+                  <div class="divider"></div>
+                  <a class="btn btn-outline-primary"
+                    href="/client/{{row.transaction.merchant.transactionId}}">Client</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- PAGINATION-->
+          <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                <li class="page-item" [ngClass]="transactionResponse.prev_page_url ? 'active': 'disable'">
+                  <button class="page-link" aria-label="Previous" (click)="goToPage(transactionResponse.current_page-1)">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                  </button>
+                </li>
+
+                <li class="page-item" *ngFor="let item of [].constructor(transactionResponse.current_page); let i = index">
+                  <button class="page-link" (click)="goToPage(i+1)" >{{i+1}}</button>
+                </li>
+
+                <li class="page-item" [ngClass]="transactionResponse.next_page_url ? 'active': 'disable'">
+                  <button class="page-link" aria-label="Next" (click)="goToPage(transactionResponse.next_page_url ? transactionResponse.current_page+1 : 0)">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="transactionResponse">
+      <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+
+            <ul class="nav nav-tabs nav-tab-modal" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="merchantInfo-tab" data-toggle="tab" href="#merchantInfo" role="tab"
+                  aria-controls="merchantInfo" aria-selected="true">Merchant Info</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="customerInfo-tab" data-toggle="tab" href="#customerInfo" role="tab"
+                  aria-controls="customerInfo" aria-selected="false">Customer Info</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="acquirerInfo-tab" data-toggle="tab" href="#acquirerInfo" role="tab"
+                  aria-controls="acquirerInfo" aria-selected="false">Acquirer Info</a>
+              </li>
+            </ul>
+
+            <div class="card mb-3">
+
+              <div class="tab-content" id="myTabContent" *ngIf="transactionResponse.data[modalIndex]">
+                <div class="tab-pane fade show active" id="merchantInfo" role="tabpanel"
+                  aria-labelledby="merchantInfo-tab">
+                  <br />
+                  <div class="form-row col-auto">
+                    <div class="form-group col-md-6">
+                      <label for="info9">Merchant ID</label>
+                      <div class="form-control" id="info9">
+                        {{transactionResponse.data[modalIndex].merchant.id}}</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="info10">Merchant Name</label>
+                      <div class="form-control" id="info10">
+                        {{transactionResponse.data[modalIndex].merchant.name}}</div>
+                    </div>
+                  </div>
+
+                  <div class="form-row col-auto">
+                    <div class="form-group col-md-6">
+                      <label for="info1">Transaction ID</label>
+                      <div class="form-control" id="info1">
+                        {{transactionResponse.data[modalIndex].transaction.merchant.transactionId}}</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="info2">Reference No</label>
+                      <div class="form-control" id="info2">
+                        {{transactionResponse.data[modalIndex].transaction.merchant.referenceNo}}</div>
+                    </div>
+                  </div>
+
+                  <div class="form-row col-auto">
+                    <div class="form-group col-md-6">
+                      <label for="info3">Message</label>
+                      <div class="form-control" id="info3">
+                        {{transactionResponse.data[modalIndex].transaction.merchant.message}}</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="info4">Created Date Time</label>
+                      <div class="form-control" id="info4">
+                        {{transactionResponse.data[modalIndex].transaction.merchant.created_at}}</div>
+                    </div>
+                  </div>
+
+                  <div class="form-row col-auto">
+                    <div class="form-group col-md-6">
+                      <label for="info5">Operation</label>
+                      <div class="form-control" id="info5">
+                        {{transactionResponse.data[modalIndex].transaction.merchant.operation}}</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="info6">Type</label>
+                      <div class="form-control" id="info6">
+                        {{transactionResponse.data[modalIndex].transaction.merchant.type}}</div>
+                    </div>
+                  </div>
+
+                  <div class="form-row col-auto">
+                    <div class="form-group col-md-6">
+                      <label for="info7">Status</label>
+                      <div class="form-control" id="info7">
+                        {{transactionResponse.data[modalIndex].transaction.merchant.status}}</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="info8">Custom Data</label>
+                      <div class="form-control" id="info8">
+                        {{transactionResponse.data[modalIndex].transaction.merchant.customData}}</div>
+                    </div>
+                  </div>
+
+                  <div class="form-row col-auto">
+                    <div class="form-group col-md-6">
+                      <label for="info11">Code</label>
+                      <div class="form-control" id="info11">
+                        {{transactionResponse.data[modalIndex].ipn.merchant.code}}</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="info12">Amount</label>
+                      <div class="form-control" id="info12">
+                        {{transactionResponse.data[modalIndex].ipn.merchant.amount}}</div>
+                    </div>
+                  </div>
+
+                  <div class="form-row col-auto">
+                    <div class="form-group col-md-6">
+                      <label for="info13">Payment Type</label>
+                      <div class="form-control" id="info13">
+                        {{transactionResponse.data[modalIndex].ipn.merchant.paymentType}}</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="info14">Currency</label>
+                      <div class="form-control" id="info14">
+                        {{transactionResponse.data[modalIndex].ipn.merchant.currency}}</div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="tab-pane fade" id="customerInfo" role="tabpanel" aria-labelledby="customerInfo-tab">
+
+                  <br />
+                  <div class="form-row col-auto">
+                    <div class="form-group col-md-6">
+                      <label for="info17">First Name</label>
+                      <div class="form-control" id="info17">
+                        {{transactionResponse.data[modalIndex].customerInfo.billingFirstName}}</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="info18">Last Name</label>
+                      <div class="form-control" id="info18">
+                        {{transactionResponse.data[modalIndex].customerInfo.billingLastName}}</div>
+                    </div>
+                  </div>
+
+                  <div class="form-row col-auto">
+                    <div class="form-group col-md-6">
+                      <label for="info15">Customer Number</label>
+                      <div class="form-control" id="info15">
+                        {{transactionResponse.data[modalIndex].customerInfo.number}}</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="info10">Customer Email</label>
+                      <div class="form-control" id="info10">
+                        {{transactionResponse.data[modalIndex].customerInfo.email}}</div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="tab-pane fade" id="acquirerInfo" role="tabpanel" aria-labelledby="acquirerInfo-tab">
+                  <br />
+                  <div class="form-row col-auto">
+                    <div class="form-group col-md-6">
+                      <label for="info19">Acquirer ID</label>
+                      <div class="form-control" id="info19">
+                        {{transactionResponse.data[modalIndex].acquirer.id}}</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="info20">Acquirer Name</label>
+                      <div class="form-control" id="info20">
+                        {{transactionResponse.data[modalIndex].acquirer.name}}</div>
+                    </div>
+                  </div>
+
+                  <div class="form-row col-auto">
+                    <div class="form-group col-md-6">
+                      <label for="info21">Acquirer Code</label>
+                      <div class="form-control" id="info21">
+                        {{transactionResponse.data[modalIndex].acquirer.code}}</div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="info22">Acquirer Type</label>
+                      <div class="form-control" id="info22">
+                        {{transactionResponse.data[modalIndex].acquirer.type}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- /.container-fluid -->
+
+  <!-- Sticky Footer -->
+  <footer class="sticky-footer">
+    <div class="container my-auto">
+      <div class="copyright text-center my-auto">
+        <span>Copyright © Financial House 2019</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+<!-- /.content-wrapper -->

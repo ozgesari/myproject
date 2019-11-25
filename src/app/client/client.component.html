@@ -1,0 +1,144 @@
+<div id="content-wrapper">
+
+  <div class="container-fluid">
+
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="#">Client</a>
+      </li>
+      <li class="breadcrumb-item active">
+        {{clientResponse ? clientResponse.customerInfo.billingTitle + " " +  clientResponse.customerInfo.billingFirstName + " " + clientResponse.customerInfo.billingLastName : "N/A"}}
+      </li>
+    </ol>
+
+    <!-- ERROR RESPONSE -->
+    <div *ngIf="errorResponse" class="alert alert-danger" role="alert">{{errorResponse.status + " : " + errorResponse.message}}</div>
+
+    <!-- TRANSACTION INFO -->
+    <div *ngIf="clientResponse">
+      <div class="card mb-3">
+        <div class="card-header">Client Details</div>
+        <div class="card-body">
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view60">Client ID</label>
+                <div class="form-control" id="view60">
+                  {{clientResponse.customerInfo.id}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view61">Created Date Time</label>
+                <div class="form-control" id="view61">
+                  {{clientResponse.customerInfo.created_at}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view62">Updated Date Time</label>
+                <div class="form-control" id="view62">
+                  {{clientResponse.customerInfo.updated_at}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view63">Deleted Date Time</label>
+                <div class="form-control" id="view63">
+                  {{clientResponse.customerInfo.deleted_at ? clientResponse.customerInfo.deleted_at : "N/A"}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view64">Client Number</label>
+                <div class="form-control" id="view64">
+                  {{clientResponse.customerInfo.number}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view65">Expiry Date Time</label>
+                <div class="form-control" id="view65">
+                  {{clientResponse.customerInfo.expiryYear + " / " + clientResponse.customerInfo.expiryMonth}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view66">Email</label>
+                <div class="form-control" id="view66">
+                  {{clientResponse.customerInfo.email}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view67">Birthdate</label>
+                <div class="form-control" id="view67">
+                  {{clientResponse.customerInfo.birthday}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="view68">Billing Name</label>
+                <div class="form-control" id="view68">
+                  {{clientResponse.customerInfo.billingTitle + " " +  clientResponse.customerInfo.billingFirstName + " "  + clientResponse.customerInfo.billingLastName}}
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="view69">Birthdate</label>
+                <div class="form-control" id="view69">
+                  {{clientResponse.customerInfo.birthday}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="view70">Billing Phone</label>
+                  <div class="form-control" id="view70">
+                    {{clientResponse.customerInfo.billingPhone}}
+                  </div>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="view70">Billing City</label>
+                  <div class="form-control" id="view70">
+                    {{clientResponse.customerInfo.billingCity}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSACTION INFO -->
+  </div>
+  <!-- /.container-fluid -->
+
+  <!-- Sticky Footer -->
+  <footer class="sticky-footer">
+    <div class="container my-auto">
+      <div class="copyright text-center my-auto">
+        <span>Copyright © Financial House 2019</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+<!-- /.content-wrapper -->
